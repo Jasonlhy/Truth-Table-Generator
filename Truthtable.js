@@ -2,17 +2,7 @@
  * 
  */
 
-function Set() {
-}
-Set.prototype.add = function(o) {
-	this[o] = true;
-}
-Set.prototype.remove = function(o) {
-	delete this[o];
-}
-
-function NotationConverter() {
-}
+function NotationConverter() {}
 NotationConverter.prototype = new Object();
 NotationConverter.prototype.keywords = [ "and", "or", "not" ];
 
@@ -123,22 +113,46 @@ NotationConverter.prototype.convert = function(infixExpression) {
 	return postfix.trim();
 };
 
-var converter = new NotationConverter();
-// console.log(converter.convert("infix expression"));
-// console.log(converter.convert("and or"));
-console.log("postfix converted (a and b): " + converter.convert("a and b"));
-console.log("postfix converted (a and not b): "
-		+ converter.convert("a and not b"));
-console.log("postfix converted (not a and b): "
-		+ converter.convert("not a and b"));
-console.log("precedence and: " + converter.getPrecedence("and"));
-console.log("precedence or: " + converter.getPrecedence("or"));
-console.log("precedence not: " + converter.getPrecedence("not"));
-console.log("get variable list (a not b and): "
-		+ converter.getVariableList("a not b and"));
-console.log("get variable list (a not b and b): "
-		+ converter.getVariableList("a not b and b"));
 
+/**
+ * Generate template of truth table without result
+ */
+function TruthtableGenerator(){
+	
+} 
+/**
+ *  
+ * @param variableList variable list for the variable in the truth table, e.g. ["a","b"]
+ * @return generate a truth table. [{"a":true, "b":true} , {"a":false, "b":false}];
+ */
+TruthtableGenerator.prototype.generate = function(variableList){
+	var count = variableList.length;
+	var lastIndex = count - 1;
+	var totalRow = Math.pow(2, count);
+	
+	var numberOfPair; // the longest true-true or true-true-true-true, false-false, false-false-false-false pair along the y axis in a column
+	var cellValue;
+	
+	var truthtable = [];
+	for (var rowIndex = 0; rowIndex < totalRow ; rowIndex++){
+		var row = [];
+		for (var columnIndex = 0; columnIndex < variableList.length; columnIndex++){
+			numberOfPair = Math.pow(2, lastIndex - columnIndex);
+			var trueFalseSectionIndex = parseInt(rowIndex / numberOfPair);
+			cellValue = trueFalseSectionIndex % 2 === 0;
+			
+			row[ variableList[columnIndex] ] = cellValue; 
+		}
+		truthtable.push(row);
+	}
+	
+	return truthtable;
+};
+
+
+/**
+ * 
+ */
 // Evaluator
 function PostfixEvalutor() {
 }
@@ -221,108 +235,49 @@ PostfixEvalutor.prototype.evalute = function(postfixExpression) {
 		var result = this.evaluteRow(tokenArray, row);
 		truthtable[rowIndex]["result"] = result;
 	}
-
-	console.log("truthtable result...");
-	console.log("row length of truthtable..." + truthtable.length);
-	console.log("column length of truthtable[0]..." + truthtable[0].length);
-	console.log("keys: " + Object.keys(truthtable[0]));
-	for (var rowIndex = 0; rowIndex < truthtable.length; rowIndex++) {
-		row = truthtable[rowIndex];
-		for (property in row) {
-			console.log(property + " = " + row[property]);
-		}
-
-		// for (var columnIndex = 0; columnIndex < 3; columnIndex++){
-		// console.log(truthtable[rowIndex][columnIndex]);
-		// }
-	}
 }
 
-// var evalutor = new PostfixEvalutor();
-// evalutor.setMapping({"a":true, "b":true});
-// infix: not a and b
-// console.log("postfix evaluatle (a not b and): " + evalutor.evalute("a not b
-// and"));
-
-var truthtable = [ {
-	"a" : true,
-	"b" : true
-}, {
-	"a" : true,
-	"b" : false
-}, {
-	"a" : false,
-	"b" : true
-}, {
-	"a" : false,
-	"b" : false
-} ];
-var evalutor = new PostfixEvalutor();
-evalutor.setTruthtable(truthtable);
-evalutor.evalute("a not b and");
-
 /**
- * Generate template of truth table without result
+ * 
  */
-function TruthableGenerator(){
+function TruthtableUI(){}
+TruthtableUI.prototype.generate = function(infixInput, outputDiv){		
 	
-} 
-/**
- *  
- * @param variableList variable list for the variable in the truth table, e.g. ["a","b"]
- * @return generate a truth table. [{"a":true, "b":true} , {"a":false, "b":false}];
- */
-TruthableGenerator.prototype.generate = function(variableList){
-	var count = variableList.length;
-	var lastIndex = count - 1;
-	var totalRow = Math.pow(2, count);
+	// convert infix from postfix to infix
+	// and get the variablelist
+	var converter = new NotationConverter();
+	var postfix = converter.convert(infixInput);
+	var variableList = converter.getVariableList(postfix);
 	
-	var numberOfPair; // the longest true-true or true-true-true-true, false-false, false-false-false-false pair along the y axis in a column
-	var cellValue;
+	// generate true and false table
+	var truthtableGenerator = new TruthtableGenerator();
+	var truthtable = truthtableGenerator.generate(variableList);
 	
-	var truthtable = [];
-	for (var rowIndex = 0; rowIndex < totalRow ; rowIndex++){
-		var row = [];
-		for (var columnIndex = 0; columnIndex < variableList.length; columnIndex++){
-			numberOfPair = Math.pow(2, lastIndex - columnIndex);
-			var trueFalseSectionIndex = parseInt(rowIndex / numberOfPair);
-			cellValue = trueFalseSectionIndex % 2 === 0;
-			
-			row[ variableList[columnIndex] ] = cellValue; 
+	// evalute the result
+	var evalutor = new PostfixEvalutor();
+	evalutor.setTruthtable(truthtable);
+	evalutor.evalute(postfix);
+	
+	var resultTruthtable = evalutor.getTruthtable();
+	
+	var tableContent = '<table>';
+	tableContent += '<tr>'
+	for (var i = 0; i < variableList.length; i++){
+		tableContent += '<th>' + variableList[i] + '</th>'; 
+	}
+	tableContent += '<th>Result</th>';
+	tableContent += '</tr>';
+	
+	for (var i = 0; i < resultTruthtable.length; i++){
+		var row = resultTruthtable[i];
+		tableContent += '<tr>'
+		for (key in row){
+			tableContent += '<th>' + row[key] + '</th>';	
 		}
-		truthtable.push(row);
+		tableContent += '</tr>';
 	}
+	tableContent += '</table>';
+	//alert(tableContent);
 	
-	return truthtable;
-};
-// for (var i = 0; i <testMapping.length; i++){
-// evalutor.setMapping(testMapping[i]);
-// console.log(evalutor.evalute("a not b and"));
-// }
-
-tbGenerator = new TruthableGenerator();
-var vlist = ["a", "b"];
-var tableGenerated = tbGenerator.generate(vlist);
-
-console.log("table generated: "+tableGenerated);
-
-console.log("tableGenerated result...");
-console.log("row length of tableGenerated..." + tableGenerated.length);
-console.log("column length of tableGenerated[0]..." + tableGenerated[0].length);
-console.log("keys: " + Object.keys(tableGenerated[0]));
-for (var rowIndex = 0; rowIndex < tableGenerated.length; rowIndex++) {
-	row = tableGenerated[rowIndex];
-	for (property in row) {
-		console.log(property + " = " + row[property]);
-	}
-
-	// for (var columnIndex = 0; columnIndex < 3; columnIndex++){
-	// console.log(tableGenerated[rowIndex][columnIndex]);
-	// }
+	document.getElementById(outputDiv).innerHTML = tableContent;
 }
-
-
-// integration test
-var evalutor = new PostfixEvalutor();
-evalutor.setTruthtable(tableGenerated);
-evalutor.evalute("a not b and");
