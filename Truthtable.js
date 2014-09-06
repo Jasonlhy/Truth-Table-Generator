@@ -33,21 +33,21 @@ NotationConverter.prototype.getVariableList = function(postfixExpression) {
 	return list;
 }
 
-// larger number = higher precedence...
+// lowest number = higher precedence...
 NotationConverter.prototype.getPrecedence = function(operator) {
 	var precedence;
 	switch (operator) {
 	case "not":
-		precedence = 3;
+		precedence = 1;
 		break;
 	case "and":
 		precedence = 2;
 		break;
 	case "or":
-		precedence = 1;
+		precedence = 3;
 		break;
 	default:
-		precedence = -1;
+		precedence = 99; // this is for (....
 		break;
 	}
 
@@ -57,7 +57,7 @@ NotationConverter.prototype.getPrecedence = function(operator) {
 NotationConverter.prototype.isHigherPrecedence = function(operatorA, operatorB) {
 	var higherPrecedenceResult;
 
-	higherPrecedenceResult = this.getPrecedence(operatorA) > this
+	higherPrecedenceResult = this.getPrecedence(operatorA) < this
 			.getPrecedence(operatorB);
 
 	// return (higherPrecedenceResult > 0)
