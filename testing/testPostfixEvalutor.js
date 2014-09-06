@@ -104,3 +104,46 @@ QUnit.test("evalute postfix: (a b or)", function(assert) {
 	
 	assert.ok(ok, "result of (a b or )are equal as "+ JSON.stringify(expectedEvaluteTruthtable));
 });
+
+QUnit.test("evalute postfix: (a b =>)", function(assert) {
+	var expectedEvaluteTruthtable = [ {
+		"a" : true,
+		"b" : true,
+		"result" : true
+	}, {
+		"a" : true,
+		"b" : false,
+		"result" : false
+	}, {
+		"a" : false,
+		"b" : true,
+		"result" : true
+	}, {
+		"a" : false,
+		"b" : false,
+		"result" : true
+	} ];
+	
+	var truthtable = [ {
+		"a" : true,
+		"b" : true
+	}, {
+		"a" : true,
+		"b" : false
+	}, {
+		"a" : false,
+		"b" : true
+	}, {
+		"a" : false,
+		"b" : false
+	} ];
+	
+	var evalutor = new PostfixEvalutor();
+	evalutor.setTruthtable(truthtable);
+	evalutor.evalute("a b =>");
+	
+	var evalutedTruthtable = evalutor.getTruthtable();
+	var ok = compareArrayOfAssocArray(expectedEvaluteTruthtable, evalutedTruthtable);
+	
+	assert.ok(ok, "result of (a b or )are equal as "+ JSON.stringify(expectedEvaluteTruthtable));
+});

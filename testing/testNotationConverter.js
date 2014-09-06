@@ -179,3 +179,46 @@ QUnit.test( "infix: ( (a and c ) )to postfix", function( assert  ) {
 	
 	assert.ok( result === expectedPostfix, "ExepctedPostfix: " + expectedPostfix +" Result: "+ result );
 } );
+
+/**
+* Test implies...
+*/
+QUnit.test( "infix: ( a => c )to postfix", function( assert  ) {
+	var infixInput = '(a => c)';
+	var expectedPostfix = 'a c =>';
+	
+	var converter = new NotationConverter();
+	var result = converter.convert(infixInput);
+	
+	assert.ok( result === expectedPostfix, "ExepctedPostfix: " + expectedPostfix +" Result: "+ result );
+} );
+
+QUnit.test( "infix: ( a => b or c)to postfix", function( assert  ) {
+	var infixInput = '(a => b or c)';
+	var expectedPostfix = 'a b c or =>';
+	
+	var converter = new NotationConverter();
+	var result = converter.convert(infixInput);
+	
+	assert.ok( result === expectedPostfix, "ExepctedPostfix: " + expectedPostfix +" Result: "+ result );
+} );
+
+QUnit.test( "infix: ( a => b and c)to postfix", function( assert  ) {
+	var infixInput = '(a => b and c)';
+	var expectedPostfix = 'a b c and =>';
+	
+	var converter = new NotationConverter();
+	var result = converter.convert(infixInput);
+	
+	assert.ok( result === expectedPostfix, "ExepctedPostfix: " + expectedPostfix +" Result: "+ result );
+} );
+
+QUnit.test( "infix: ( a => not b )to postfix", function( assert  ) {
+	var infixInput = '(a => not b)';
+	var expectedPostfix = 'a b not =>';
+	
+	var converter = new NotationConverter();
+	var result = converter.convert(infixInput);
+	
+	assert.ok( result === expectedPostfix, "ExepctedPostfix: " + expectedPostfix +" Result: "+ result );
+} );

@@ -4,7 +4,7 @@
 
 function NotationConverter() {}
 NotationConverter.prototype = new Object();
-NotationConverter.prototype.keywords = [ "and", "or", "not" ];
+NotationConverter.prototype.keywords = [ "and", "or", "not", "=>" ];
 
 NotationConverter.prototype.isKeywords = function(word) {
 	var result = this.keywords.indexOf(word) !== -1;
@@ -45,6 +45,9 @@ NotationConverter.prototype.getPrecedence = function(operator) {
 		break;
 	case "or":
 		precedence = 3;
+		break;
+	case "=>":
+		precedence = 4;
 		break;
 	default:
 		precedence = 99; // this is for (....
@@ -203,11 +206,16 @@ PostfixEvalutor.prototype.evaluteRow = function(tokenArray, row) {
 			valB = stack.pop();
 			valA = stack.pop();
 			result = valA || valB;
-		} else if (token == "and") {
+		} else if (token === "and") {
 			valB = stack.pop();
 			valA = stack.pop();
 			result = valA && valB;
-		} else {
+		} else if (token === "=>"){
+			valB = stack.pop();
+			valA = stack.pop();
+			result = !(valA && !valB);  // only (A = T, B = F) will be false, so not them => true
+		}
+		else { // variable
 			result = row[element];
 		}
 		stack.push(result);
@@ -216,32 +224,6 @@ PostfixEvalutor.prototype.evaluteRow = function(tokenArray, row) {
 	return stack.pop();
 };
 PostfixEvalutor.prototype.evalute = function(postfixExpression) {
-
-	// arrayStrings = postfixExpression.split(" ");
-	// arrayStrings.forEach(function(element){
-	// console.log("pushing postfix token: "+element);
-	// stack.push(element);
-	//		
-	// token = stack.pop();
-	// console.log("poping token: "+token);
-	// if (token === "not"){
-	// valB = stack.pop();
-	// console.log("valB in not "+ valB);
-	// result = "(not " + valB + ") ";
-	// } else if (token === "or"){
-	// valB = stack.pop();
-	// valA = stack.pop();
-	// result = "(" + valA + " or "+ valB + ") ";
-	// } else if (token == "and"){
-	// valB = stack.pop();
-	// valA = stack.pop();
-	// result = "(" + valA + " and " + valB + ") ";
-	// } else {
-	// result = element;
-	// }
-	// stack.push(result);
-	// });
-
 	var tokenArray = postfixExpression.split(" ");
 	var row;
 	var truthtable = this.getTruthtable();
@@ -257,7 +239,7 @@ PostfixEvalutor.prototype.evalute = function(postfixExpression) {
  * 
  */
 function TruthtableUI(){}
-TruthtableUI.prototype.generate = function(infixInput, outputDiv){		
+TruthtableUI.prototype.generate = function(infixInput, outputDiv, generatedTableId){		
 	
 	// convert infix from postfix to infix
 	// and get the variablelist
@@ -276,12 +258,12 @@ TruthtableUI.prototype.generate = function(infixInput, outputDiv){
 	
 	var resultTruthtable = evalutor.getTruthtable();
 	
-	var tableContent = '<table class="table table-bordered table-hover" >';
+	var tableContent = '<table class="table table-bordered table-hover" id="' +generatedTableId + '" >';
 	tableContent += '<thead><tr>'
 	for (var i = 0; i < variableList.length; i++){
 		tableContent += '<th>' + variableList[i] + '</th>'; 
 	}
-	tableContent += '<th>Result</th>';
+	tableContent += '<th>' + infixInput + '</th>';
 	tableContent += '</tr></thead>';
 	
 	tableContent += '<tbody>';
