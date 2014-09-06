@@ -276,22 +276,24 @@ TruthtableUI.prototype.generate = function(infixInput, outputDiv){
 	
 	var resultTruthtable = evalutor.getTruthtable();
 	
-	var tableContent = '<table>';
-	tableContent += '<tr>'
+	var tableContent = '<table class="table table-bordered table-hover" >';
+	tableContent += '<thead><tr>'
 	for (var i = 0; i < variableList.length; i++){
 		tableContent += '<th>' + variableList[i] + '</th>'; 
 	}
 	tableContent += '<th>Result</th>';
-	tableContent += '</tr>';
+	tableContent += '</tr></thead>';
 	
+	tableContent += '<tbody>';
 	for (var i = 0; i < resultTruthtable.length; i++){
 		var row = resultTruthtable[i];
 		tableContent += '<tr>'
 		for (key in row){
-			tableContent += '<th>' + row[key] + '</th>';	
+			tableContent += '<td>' + row[key] + '</td>';	
 		}
 		tableContent += '</tr>';
 	}
+	tableContent += '</tbody>';
 	tableContent += '</table>';
 	//alert(tableContent);
 	
