@@ -38,10 +38,10 @@ table {
 		This is a truth table generator helps you to generate a Truth Table.
 		All you need is to input a formula, such as: <span class="formula">a
 			and b</span>, <span class="formula">a or b</span>, <span class="formula">a
-			or not b</span>, etc. Right now, it only supports the operator of <span
+			or not b</span>, etc. Right now, it only supports the operators: <span
 			class="formula">and</span>, <span class="formula">or</span> , <span
-			class="formula">not</span>. However, it also supports the buckets,
-		which means you can enter the formula like: <span class="formula">(a
+			class="formula">not</span>. However, it also supports the brackets,
+		  you can enter the formula like: <span class="formula">(a
 			or not b) and a</span>. For, more information, please check out the <a
 			href="#syntaxSection">syntax section</a>
 	</p>
@@ -61,13 +61,15 @@ table {
 	<div>
 		<p>
 			You can enter the formula with variables using any names without
-			spaces. such as <span class="formula">jason or sam</span>. You can
-			also enter buckets to specify the highest precedence, <span
+			spaces (except "not", "or", "and"), such as <span class="formula">jason or sam</span>. You can
+			also enter brackets to specify the highest precedence, <span
 				class="formula"> (jason or tommy) or (jason and not tommy)</span>.
-			The evaluation order of operator in the formula is according to the
+			The evaluation order of operators in the formula is according to the
 			precedence table.
 		</p>
 		<h3>Precedence Table</h3>
+    <p>The lower number of precedence in the table means the higher precedence       for evaluation.
+    </p>
 		<table class="table table-striped">
 			<thead>
 				<th>Operator</th>
