@@ -38,13 +38,13 @@ NotationConverter.prototype.getPrecedence = function(operator) {
 	var precedence;
 	switch (operator) {
 	case "not":
-		precedence = 2;
+		precedence = 3;
 		break;
 	case "and":
-		precedence = 1;
+		precedence = 2;
 		break;
 	case "or":
-		precedence = 2;
+		precedence = 1;
 		break;
 	default:
 		precedence = -1;
@@ -96,7 +96,19 @@ NotationConverter.prototype.convert = function(infixExpression) {
 				stack.push(token);
 			}
 
-		} else { // number
+		} else if (token === '(') { 
+			stack.push(token);
+		} else if (token === ')'){
+			while (stack.length > 0){
+				var top = stack[stack.length -1];
+				if (top === '('){
+					stack.pop();
+					break;
+				} else {
+					postfix += stack.pop() + " ";
+				}
+			}
+		} else { // variable
 			postfix += token + " ";
 			console.log("put number into string : " + token);
 		}
