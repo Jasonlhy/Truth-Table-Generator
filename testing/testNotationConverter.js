@@ -136,3 +136,46 @@ QUnit.test( "infix: ( a and ( b or c ) )to postfix", function( assert  ) {
 	
 	assert.ok( result === expectedPostfix, "ExepctedPostfix: " + expectedPostfix +" Result: "+ result );
 } );
+
+/**
+ * Testing buckets without space
+ */
+QUnit.test( "infix: ( ( a and c ) )to postfix", function( assert  ) {
+	var infixInput = '( a and c )';
+	var expectedPostfix = 'a c and';
+	
+	var converter = new NotationConverter();
+	var result = converter.convert(infixInput);
+	
+	assert.ok( result === expectedPostfix, "ExepctedPostfix: " + expectedPostfix +" Result: "+ result );
+} );
+
+QUnit.test( "infix: ( (a and c ) )to postfix", function( assert  ) {
+	var infixInput = '(a and c )';
+	var expectedPostfix = 'a c and';
+	
+	var converter = new NotationConverter();
+	var result = converter.convert(infixInput);
+	
+	assert.ok( result === expectedPostfix, "ExepctedPostfix: " + expectedPostfix +" Result: "+ result );
+} );
+
+QUnit.test( "infix: ( (a and c ) )to postfix", function( assert  ) {
+	var infixInput = '( a and c)';
+	var expectedPostfix = 'a c and';
+	
+	var converter = new NotationConverter();
+	var result = converter.convert(infixInput);
+	
+	assert.ok( result === expectedPostfix, "ExepctedPostfix: " + expectedPostfix +" Result: "+ result );
+} );
+
+QUnit.test( "infix: ( (a and c ) )to postfix", function( assert  ) {
+	var infixInput = '(a and c)';
+	var expectedPostfix = 'a c and';
+	
+	var converter = new NotationConverter();
+	var result = converter.convert(infixInput);
+	
+	assert.ok( result === expectedPostfix, "ExepctedPostfix: " + expectedPostfix +" Result: "+ result );
+} );

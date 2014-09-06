@@ -66,11 +66,15 @@ NotationConverter.prototype.isHigherPrecedence = function(operatorA, operatorB) 
 
 NotationConverter.prototype.convert = function(infixExpression) {
 	var postfix = "";
-	arrayStrings = infixExpression.split(" ");
+	var pattern = /(\(|\)| )/g;
+	var arrayStrings = infixExpression.split(pattern);
+	var arrayWithoutSpace = arrayStrings.filter(function(element){
+		return element != ' ' && element != "";
+	});
 	stack = [];
 
-	for (var i = 0; i < arrayStrings.length; i++) {
-		var token = arrayStrings[i];
+	for (var i = 0; i < arrayWithoutSpace.length; i++) {
+		var token = arrayWithoutSpace[i];
 		console.log("token: " + token);
 
 		// the keywords?
