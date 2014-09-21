@@ -4,7 +4,7 @@
 
 function NotationConverter() {}
 NotationConverter.prototype = new Object();
-NotationConverter.prototype.keywords = [ "and", "or", "not", "=>" ];
+NotationConverter.prototype.keywords = [ "and", "or", "not", "=>", "<=>" ];
 
 NotationConverter.prototype.isKeywords = function(word) {
 	var result = this.keywords.indexOf(word) !== -1;
@@ -48,6 +48,9 @@ NotationConverter.prototype.getPrecedence = function(operator) {
 		break;
 	case "=>":
 		precedence = 4;
+		break;
+	case "<=>":
+		precedence = 5;
 		break;
 	default:
 		precedence = 99; // this is for (....
@@ -214,6 +217,11 @@ PostfixEvalutor.prototype.evaluteRow = function(tokenArray, row) {
 			valB = stack.pop();
 			valA = stack.pop();
 			result = !(valA && !valB);  // only (A = T, B = F) will be false, so not them => true
+		}
+		else if (token === "<=>" ) {
+			valB = stack.pop();
+			valA = stack.pop();
+			result = valA === valB;
 		}
 		else { // variable
 			result = row[element];

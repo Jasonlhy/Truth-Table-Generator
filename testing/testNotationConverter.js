@@ -222,3 +222,14 @@ QUnit.test( "infix: ( a => not b )to postfix", function( assert  ) {
 	
 	assert.ok( result === expectedPostfix, "ExepctedPostfix: " + expectedPostfix +" Result: "+ result );
 } );
+
+
+QUnit.test( "infix: ( a <=> b )to postfix", function( assert  ) {
+	var infixInput = 'a <=> b';
+	var expectedPostfix = 'a b <=>';
+	
+	var converter = new NotationConverter();
+	var result = converter.convert(infixInput);
+	
+	assert.ok( result === expectedPostfix, "ExepctedPostfix: " + expectedPostfix +" Result: "+ result );
+} );
