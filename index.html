@@ -31,10 +31,13 @@ thead {
 <script>
 	function generate() {
 		var infixInput = document.getElementById('infixInput').value;
-
 		var truthtable = new TruthtableUI();
 		var generatedTableId = 'generateTable';
-		truthtable.generate(infixInput, 'truthTableDiv', generatedTableId);
+        var selectedRadioBtn = document.querySelector('input[name="format"]:checked');
+        if (selectedRadioBtn != null) {
+            var format = selectedRadioBtn.value;
+        }
+		truthtable.generate(infixInput, 'truthTableDiv', generatedTableId, format);
 
 		var selecter = '#' + generatedTableId;
 		$(selecter).floatThead(); // bind the event to dynamically created table
@@ -62,9 +65,15 @@ thead {
 			href="#syntaxSection">syntax section</a>
 	</p>
 	<h3>Input the formula, for example: a and b</h3>
-	<input type="text" class="form-control" id="infixInput" />
+    Representation format : 
+    <fieldset>
+        <input type="radio" name="format" value="undefined"> true, false</><br>
+        <input type="radio" name="format" value="UPPER_LETTER"> T, F</><br>
+        <input type="radio" name="format" value="DIGIT"> 1, 0</><br><br>
+        <input type="text" class="form-control" id="infixInput" />
+    </fieldset>
 	<button type="button" class="btn btn-primary btn-sm"
-		onclick="generate()">Generate</button>
+                       onclick="generate()">Generate</button><br>
 
 	<br />
 	<br />

@@ -245,9 +245,16 @@ PostfixEvalutor.prototype.evalute = function(postfixExpression) {
 
 /**
  * 
+ * infixInput : infix formula string
+ * outputDiv : the id of the div
+ * generatedTableId : the table id to be generated
+ * format : the representation format of the cell value
+ *      undefined : true, false
+ *      'UPPER_LETTER' : T, F
+ *      'DIGIT' : 1, 0
  */
 function TruthtableUI(){}
-TruthtableUI.prototype.generate = function(infixInput, outputDiv, generatedTableId){		
+TruthtableUI.prototype.generate = function(infixInput, outputDiv, generatedTableId, format){		
 	
 	// convert infix from postfix to infix
 	// and get the variablelist
@@ -266,12 +273,12 @@ TruthtableUI.prototype.generate = function(infixInput, outputDiv, generatedTable
 	
 	var resultTruthtable = evalutor.getTruthtable();
 	
-	var tableContent = '<table class="table table-bordered table-hover" id="' +generatedTableId + '" >';
+	var tableContent = '<table class="table table-bordered table-hover text-center" id="' +generatedTableId + '" >';
 	tableContent += '<thead><tr>'
 	for (var i = 0; i < variableList.length; i++){
-		tableContent += '<th>' + variableList[i] + '</th>'; 
+		tableContent += '<th class="text-center">' + variableList[i] + '</th>'; 
 	}
-	tableContent += '<th>' + infixInput + '</th>';
+	tableContent += '<th class="text-center">' + infixInput + '</th>';
 	tableContent += '</tr></thead>';
 	
 	tableContent += '<tbody>';
@@ -279,7 +286,17 @@ TruthtableUI.prototype.generate = function(infixInput, outputDiv, generatedTable
 		var row = resultTruthtable[i];
 		tableContent += '<tr>'
 		for (key in row){
-			tableContent += '<td>' + row[key] + '</td>';	
+            // value in table cell
+            var value;
+            if (format == 'undefined' || format === undefined){
+                value = row[key];
+            } else if (format === 'UPPER_LETTER'){
+                value = (row[key] === true) ? 'T' : 'F';
+            } else if (format === 'DIGIT'){
+                value = (row[key] === true) ? '1' : '0';
+            }
+            
+			tableContent += '<td>' + value + '</td>';	
 		}
 		tableContent += '</tr>';
 	}
