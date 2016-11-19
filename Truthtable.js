@@ -1,7 +1,6 @@
 /**
  * 
  */
-
 function NotationConverter() {}
 NotationConverter.prototype = new Object();
 NotationConverter.prototype.keywords = [ "and", "or", "not", "=>", "<=>" ];
@@ -10,7 +9,7 @@ NotationConverter.prototype.isKeywords = function(word) {
 	var result = this.keywords.indexOf(word) !== -1;
 	if (result)
 		console.log("found keyword : " + word);
-
+		
 	return result;
 };
 
@@ -26,7 +25,7 @@ NotationConverter.prototype.getVariableList = function(postfixExpression) {
 	});
 
 	var list = [];
-	for (variableAsKey in set) {
+	for (var variableAsKey in set) {
 		list.push(variableAsKey);
 	}
 
@@ -77,7 +76,7 @@ NotationConverter.prototype.convert = function(infixExpression) {
 	var arrayWithoutSpace = arrayStrings.filter(function(element){
 		return element != ' ' && element != "";
 	});
-	stack = [];
+	var stack = [];
 
 	for (var i = 0; i < arrayWithoutSpace.length; i++) {
 		var token = arrayWithoutSpace[i];
@@ -193,13 +192,12 @@ PostfixEvalutor.prototype.evaluteRow = function(tokenArray, row) {
 	var result;
 	var valA;
 	var valB;
-	var thisEvaluator = this;
 
 	tokenArray.forEach(function(element) {
 		console.log("pushing postfix token: " + element);
 		stack.push(element);
 
-		token = stack.pop();
+		var token = stack.pop();
 		console.log("poping token: " + token);
 		if (token === "not") {
 			valB = stack.pop();
@@ -285,7 +283,7 @@ TruthtableUI.prototype.generate = function(infixInput, outputDiv, generatedTable
 	for (var i = 0; i < resultTruthtable.length; i++){
 		var row = resultTruthtable[i];
 		tableContent += '<tr>'
-		for (key in row){
+		for (var key in row){
             // value in table cell
             var value;
             if (format == 'undefined' || format === undefined){
