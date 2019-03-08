@@ -1,160 +1,163 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<title>Truth Table Generator</title>
-	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-	<script src="jquery/jquery-2.1.1.js" type="text/javascript"></script>
-	<script src="jquery/jquery-ui.js" type="text/javascript"></script>
-	<script src="floatThead/jquery.floatThead.js" type="text/javascript"></script>
-	<script src="Truthtable.js" type="text/javascript"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Truth Table Generator</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <script src="jquery/jquery-2.1.1.js"></script>
+    <script src="jquery/jquery-ui.js"></script>
+    <script src="floatThead/jquery.floatThead.js"></script>
+    <script src="Truthtable.js"></script>
 
-	<style>
-		body {
-			margin-left: 10%;
-			margin-right: 10%;
-		}
-		
-		.formula {
-			font-weight:bold;
-			font-family: Courier New, Courier, monospace;
-		}
-		
-		table {
-			font-family: rockwell, serif;
-			font-weight: light;
-		}
-		
-		thead {
-			background-color: #006DCC;
-			color: white;
-		}
-	</style>
-	<script>
-	function generate() {
-		var infixInput = document.getElementById('infixInput').value;
-		var truthtable = new TruthtableUI();
-		var generatedTableId = 'generateTable';
-        var selectedRadioBtn = document.querySelector('input[name="format"]:checked');
-        if (selectedRadioBtn != null) {
-            var format = selectedRadioBtn.value;
+    <link href="index.css" rel="stylesheet"/>
+    <script>
+        function generate() {
+            var infixInput = document.getElementById('infixInput').value;
+            var truthTable = new TruthTableUI();
+            var generatedTableId = 'generateTable';
+            var selectedRadioBtn = document.querySelector('input[name="format"]:checked');
+            if (selectedRadioBtn != null) {
+                var format = selectedRadioBtn.value;
+            }
+            TruthTableUI.generate(infixInput, 'truthTableDiv', generatedTableId, format);
+
+            var selecter = '#' + generatedTableId;
+            $(selecter).floatThead(); // bind the event to dynamically created table
         }
-		truthtable.generate(infixInput, 'truthTableDiv', generatedTableId, format);
 
-		var selecter = '#' + generatedTableId;
-		$(selecter).floatThead(); // bind the event to dynamically created table
-	}
-
-	$(document).ready(function() {
-		$("#precedenceTable").floatThead(); // bind the precedence table to stick with header
-	});
-</script>
+        $(document).ready(function () {
+            $("#precedenceTable").floatThead(); // bind the precedence table to stick with header
+        });
+    </script>
 </head>
 
 <body>
-	<h1 class="page-header">Truth Table Generator</h1>
-	<p class="lead">
-		This is a truth table generator helps you to generate a Truth Table from a logical expression such as <span class="formula">a and b</span>.
-		For more information, please check out the <a href="#syntaxSection">syntax section</a>
-	</p>
 
-	<p>Representation format:</p>
-	<fieldset>
-		<input type="radio" name="format" value="undefined"> true, false<br>
-		<input type="radio" name="format" value="UPPER_LETTER"> T, F<br>
-		<input type="radio" name="format" value="DIGIT"> 1, 0<br>
-		<input type="text" class="form-control" id="infixInput" />
-	</fieldset><br>
-	<button type="button" class="btn btn-primary btn-sm" onclick="generate()">Generate</button><br>
+<h1 class="page-header">Truth Table Generator</h1>
 
-	<br />
-	<br />
-	<br />
-	<h1>Truth Table Generated</h1>
-	<div id="truthTableDiv">
-		Nothing here!
-	</div>
+<p class="lead">
+    This is a truth table generator helps you to generate a Truth Table from a logical expression such as <span
+        class="formula">a and b</span>.
+    For more information, please check out the <a href="#syntaxSection">syntax section</a>
+</p>
 
-	<br />
-	<br />
-	<h1 id="syntaxSection">Syntax</h1>
-	<div>
-		<p>
-			You can enter the formula with variables named as any words WITHOUT spaces except the <a href="#reservedWords">reserve words</a>, and the evaluation order of operators inside the formula follow the precedences in the <a href="#operatorTable">operator table.</a>
-		</p>
+<p>Representation format:</p>
 
-		<h2>Examples of formula</h2>
-		<ul>
-			<li>a and b</li>
-			<li>a or b</li>
-			<li>a or not b</li>
-			<li>not (a and b) <=> (not b) or (not a)</li>
-		</ul>
+<fieldset>
+    <label>
+        <input type="radio" name="format" value="undefined">
+        true, false
+    </label><br>
+    <label>
+        <input type="radio" name="format" value="UPPER_LETTER">
+        T, F
+    </label><br>
+    <label>
+        <input type="radio" name="format" value="DIGIT">
+        1, 0
+    </label><br>
+    <input type="text" class="form-control" id="infixInput"/>
+</fieldset>
+<br>
+<button type="button" class="btn btn-primary btn-sm" onclick="generate()">Generate</button>
+<br>
 
-		<h2 id="operatorTable">Operator Table</h2>
-		<p>
-			The lower number of precedence in the table means the higher precedence for evaluation. Therefore, <span class="formula">not</span> is evaluated before <span class="formula">and</span>, <span class="formula">and</span> is evaluated before <span class="formula">or</span>
-		</p>
-		<table class="table table-striped" id="precedenceTable">
-			<thead>
-				<th>Operator</th>
-				<th>Meaning</th>
-				<th>Example</th>
-				<th>Precedence</th>
-			</thead>
-			<tbody>
-				<tr>
-					<td class="formula">not</td>
-					<td>NOT operation</td>
-					<td class="formula">not a</td>
-					<td>1</td>
-				</tr>
-				<tr>
-					<td class="formula">and</td>
-					<td>AND operation</td>
-					<td class="formula">a and b</td>
-					<td>2</td>
-				</tr>
-				<tr>
-					<td class="formula">or</td>
-					<td>INCLUSIVE OR operation</td>
-					<td class="formula">a or b</td>
-					<td>3</td>
-				</tr>
-				<tr>
-					<td class="formula">=></td>
-					<td>IMPLIES operation</td>
-					<td class="formula">a => b</td>
-					<td>4</td>
-				</tr>
-				<tr>
-					<td class="formula">
-						<=>
-					</td>
-					<td>logical equivalent</td>
-					<td class="formula">a <=> b</td>
-					<td>5</td>
-				</tr>
-			</tbody>
-		</table>
+<br/>
+<br/>
+<br/>
+<h1>Truth Table Generated</h1>
+<div id="truthTableDiv">
+    Nothing here!
+</div>
 
-		<h2 id="reservedWords">Reserved words</h2>
-		<p>These are the words that you cannot use to name a variable inside the formula.</p>
-		<ul>
-			<li>not</li>
-			<li>and</li>
-			<li>or</li>
-			<li>=></li>
-			<li>(</li>
-			<li>)</li>
-			<li><=></li>
-		</ul>
-	</div>
+<br/>
+<br/>
+<h1 id="syntaxSection">Syntax</h1>
+<div>
+    <p>
+        You can enter the formula with variables named as any words WITHOUT spaces except the <a href="#reservedWords">reserve
+        words</a>, and the evaluation order of operators inside the formula follow the precedences in the <a
+            href="#operatorTable">operator table.</a>
+    </p>
 
-	<h1>Contact me</h1>
-	<p>If you have any suggestions or you have discovered any bugs, please contact me at <a href= "mailto:jasonlhy@gmail.com">jasonlhy@gmail.com</a></p>
+    <h2>Examples of formula</h2>
+    <ul>
+        <li>a and b</li>
+        <li>a or b</li>
+        <li>a or not b</li>
+        <li>not (a and b) <=> (not b) or (not a)</li>
+    </ul>
 
+    <h2 id="operatorTable">Operator Table</h2>
+    <p>
+        The lower number of precedence in the table means the higher precedence for evaluation. Therefore, <span
+            class="formula">not</span> is evaluated before <span class="formula">and</span>, <span
+            class="formula">and</span> is evaluated before <span class="formula">or</span>
+    </p>
+    <table class="table table-striped" id="precedenceTable">
+        <thead>
+            <th>Operator</th>
+            <th>Meaning</th>
+            <th>Example</th>
+            <th>Precedence</th>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td class="formula">not</td>
+                <td>NOT operation</td>
+                <td class="formula">not a</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td class="formula">and</td>
+                <td>AND operation</td>
+                <td class="formula">a and b</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td class="formula">or</td>
+                <td>INCLUSIVE OR operation</td>
+                <td class="formula">a or b</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td class="formula">=></td>
+                <td>IMPLIES operation</td>
+                <td class="formula">a => b</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td class="formula">
+                    <=>
+                </td>
+                <td>logical equivalent</td>
+                <td class="formula">a <=> b</td>
+                <td>5</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 id="reservedWords">Reserved words</h2>
+    <p>These are the words that you cannot use to name a variable inside the formula.</p>
+    <ul>
+        <li>not</li>
+        <li>and</li>
+        <li>or</li>
+        <li>=></li>
+        <li>(</li>
+        <li>)</li>
+        <li><=></li>
+    </ul>
+</div>
+
+<h1>Contact me</h1>
+<p>If you have any suggestions or you have discovered any bugs, please contact me at <a
+        href="mailto:jasonlhy@gmail.com">jasonlhy@gmail.com</a></p>
 </body>
 
 </html>

@@ -1,0 +1,19 @@
+body {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.formula {
+    font-weight: bold;
+    font-family: Courier New, Courier, monospace;
+}
+
+table {
+    font-family: rockwell, serif;
+    font-weight: lighter;
+}
+
+thead {
+    background-color: #006DCC;
+    color: white;
+}

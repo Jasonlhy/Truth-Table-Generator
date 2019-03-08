@@ -20,7 +20,7 @@ function compareArrayOfAssocArray(array1, array2){
  * Generate true table with 2 variables
  */
 QUnit.test("variable list: [a, b]", function(assert) {
-	var generator = new TruthtableGenerator();
+	var generator = new TruthTableGenerator();
 	var variableList = [ "a", "b" ];
 	var expectedTruthtable = [ {
 		"a" : true,
@@ -35,7 +35,7 @@ QUnit.test("variable list: [a, b]", function(assert) {
 		"a" : false,
 		"b" : false
 	} ];
-	var generatedTruthtable = generator.generate(variableList);
+	var generatedTruthtable = TruthTableGenerator.generate(variableList);
 
 	assert.ok(compareArrayOfAssocArray(expectedTruthtable, generatedTruthtable), "good");
 });

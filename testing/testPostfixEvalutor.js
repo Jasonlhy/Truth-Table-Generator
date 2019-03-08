@@ -19,7 +19,7 @@ function compareArrayOfAssocArray(array1, array2){
 /**
  * Test simple operation
  */
-QUnit.test("evalute postfix: (a b and)", function(assert) {
+QUnit.test("evaluate postfix: (a b and)", function(assert) {
 	var expectedEvaluteTruthtable = [ {
 		"a" : true,
 		"b" : true,
@@ -52,17 +52,17 @@ QUnit.test("evalute postfix: (a b and)", function(assert) {
 		"b" : false
 	} ];
 	
-	var evalutor = new PostfixEvalutor();
-	evalutor.setTruthtable(truthtable);
-	evalutor.evalute("a b and");
+	var evalutor = new PostfixEvaluator();
+	evalutor.setTruthTable(truthtable);
+	evalutor.evaluate("a b and");
 	
-	var evalutedTruthtable = evalutor.getTruthtable();
+	var evalutedTruthtable = evalutor.getTruthTable();
 	var ok = compareArrayOfAssocArray(expectedEvaluteTruthtable, evalutedTruthtable);
 	
 	assert.ok(ok, "result of (a b and ) are equal as "+ JSON.stringify(expectedEvaluteTruthtable));
 });
 
-QUnit.test("evalute postfix: (a b or)", function(assert) {
+QUnit.test("evaluate postfix: (a b or)", function(assert) {
 	var expectedEvaluteTruthtable = [ {
 		"a" : true,
 		"b" : true,
@@ -95,17 +95,17 @@ QUnit.test("evalute postfix: (a b or)", function(assert) {
 		"b" : false
 	} ];
 	
-	var evalutor = new PostfixEvalutor();
-	evalutor.setTruthtable(truthtable);
-	evalutor.evalute("a b or");
+	var evalutor = new PostfixEvaluator();
+	evalutor.setTruthTable(truthtable);
+	evalutor.evaluate("a b or");
 	
-	var evalutedTruthtable = evalutor.getTruthtable();
+	var evalutedTruthtable = evalutor.getTruthTable();
 	var ok = compareArrayOfAssocArray(expectedEvaluteTruthtable, evalutedTruthtable);
 	
 	assert.ok(ok, "result of (a b or )are equal as "+ JSON.stringify(expectedEvaluteTruthtable));
 });
 
-QUnit.test("evalute postfix: (a b =>)", function(assert) {
+QUnit.test("evaluate postfix: (a b =>)", function(assert) {
 	var expectedEvaluteTruthtable = [ {
 		"a" : true,
 		"b" : true,
@@ -138,17 +138,17 @@ QUnit.test("evalute postfix: (a b =>)", function(assert) {
 		"b" : false
 	} ];
 	
-	var evalutor = new PostfixEvalutor();
-	evalutor.setTruthtable(truthtable);
-	evalutor.evalute("a b =>");
+	var evalutor = new PostfixEvaluator();
+	evalutor.setTruthTable(truthtable);
+	evalutor.evaluate("a b =>");
 	
-	var evalutedTruthtable = evalutor.getTruthtable();
+	var evalutedTruthtable = evalutor.getTruthTable();
 	var ok = compareArrayOfAssocArray(expectedEvaluteTruthtable, evalutedTruthtable);
 	
 	assert.ok(ok, "result of (a b => )are equal as "+ JSON.stringify(expectedEvaluteTruthtable));
 });
 
-QUnit.test("evalute postfix: (a b <=>)", function(assert) {
+QUnit.test("evaluate postfix: (a b <=>)", function(assert) {
 	var expectedEvaluteTruthtable = [ {
 		"a" : true,
 		"b" : true,
@@ -181,11 +181,11 @@ QUnit.test("evalute postfix: (a b <=>)", function(assert) {
 		"b" : false
 	} ];
 	
-	var evalutor = new PostfixEvalutor();
-	evalutor.setTruthtable(truthtable);
-	evalutor.evalute("a b <=>");
+	var evalutor = new PostfixEvaluator();
+	evalutor.setTruthTable(truthtable);
+	evalutor.evaluate("a b <=>");
 	
-	var evalutedTruthtable = evalutor.getTruthtable();
+	var evalutedTruthtable = evalutor.getTruthTable();
 	var ok = compareArrayOfAssocArray(expectedEvaluteTruthtable, evalutedTruthtable);
 	
 	assert.ok(ok, "result of (a b <=> )are equal as "+ JSON.stringify(expectedEvaluteTruthtable));
