@@ -7,7 +7,7 @@ class NotationConverter {
     }
 
     isKeywords(word) {
-        var result = this.keywords.indexOf(word) !== -1;
+        const result = this.keywords.indexOf(word) !== -1;
         if (result)
             console.log("found keyword : " + word);
 
@@ -21,32 +21,19 @@ class NotationConverter {
      * @returns Array array of variable name, e.g. ["a", "b"]
      */
     getVariableList(postfixExpression) {
-        var tokens = postfixExpression.split(" ");
-        var theConverter = this;
-
-        var set = [];
-        tokens.forEach(function (element) {
-            if (!theConverter.isKeywords(element)) {
-                set[element] = true;
-            }
-        });
-
-        var list = [];
-        for (var variableAsKey in set) {
-            list.push(variableAsKey);
-        }
-
-        return list;
+        const tokens = postfixExpression.split(" ");
+        const keyWordTokens = tokens.filter(t => !this.isKeywords(t));
+        return Array.from(new Set(keyWordTokens).values());
     }
 
     /**
      * Get the precedence of operator, lowest number = higher precedence
      *
-     * @param {String} operator
+     * @param {string} operator
      * @returns
      */
     static getPrecedence(operator) {
-        var precedence;
+        let precedence;
         switch (operator) {
             case "not":
                 precedence = 1;
@@ -74,28 +61,24 @@ class NotationConverter {
     /**
      *
      *
-     * @param {any} operatorA
-     * @param {any} operatorB
+     * @param {string} operatorA
+     * @param {string} operatorB
      * @returns
      */
     static isHigherPrecedence(operatorA, operatorB) {
-        var higherPrecedenceResult;
-
-        higherPrecedenceResult = NotationConverter.getPrecedence(operatorA) < NotationConverter.getPrecedence(operatorB);
-
-        return higherPrecedenceResult;
+        return NotationConverter.getPrecedence(operatorA) < NotationConverter.getPrecedence(operatorB);
     }
 
     /**
      * Convert a infix expression into a postfix expression
      *
-     * @param {String} infixExpression - "a and b"
-     * @returns string postfix expression - "a b and"
+     * @param {string} infixExpression - "a and b"
+     * @returns {string} postfix expression - "a b and"
      */
     convert(infixExpression) {
-        var postfix = "";
-        var pattern = /([() ])/g;
-        var arrayStrings = infixExpression.split(pattern);
+        let postfix = "";
+        const pattern = /([() ])/g;
+        const arrayStrings = infixExpression.split(pattern);
 
         /**
          *
@@ -103,10 +86,10 @@ class NotationConverter {
          * @param {any} element
          * @returns
          */
-        var arrayWithoutSpace = arrayStrings.filter(function (element) {
+        const arrayWithoutSpace = arrayStrings.filter(function (element) {
             return element !== ' ' && element !== "";
         });
-        var stack = [];
+        const stack = [];
 
         for (let i = 0; i < arrayWithoutSpace.length; i++) {
             let token = arrayWithoutSpace[i];
@@ -121,11 +104,9 @@ class NotationConverter {
                     // so that they can be processed first in evaluation
                     while (stack.length > 0) {
                         let top = stack[stack.length - 1];
-                        console.log("testing top: " + top + " & " + token);
+
                         if (NotationConverter.isHigherPrecedence(top, token)) {
                             postfix += stack.pop() + " ";
-                            console.log(top + " has higher precedence than "
-                                + token + " pop & added to string");
                         } else {
                             break;
                         }
@@ -176,11 +157,11 @@ class TruthTableGenerator {
      * @returns Array truth table. [{"a":true, "b":true} , {"a":false, "b":false}]
      */
     static generate(variableList) {
-        var count = variableList.length;
-        var lastIndex = count - 1;
-        var totalRow = Math.pow(2, count);
+        const count = variableList.length;
+        const lastIndex = count - 1;
+        const totalRow = Math.pow(2, count);
 
-        var truthTable = [];
+        const truthTable = [];
         for (let rowIndex = 0; rowIndex < totalRow; rowIndex++) {
             let row = [];
 
@@ -226,20 +207,20 @@ class PostfixEvaluator {
     /**
      * Evaluate result for a row on the truth table
      *
-     * @param {any} tokenArray - The post fix evaluation token to be evaluted, e.g. ["a", "not", "b", "and"]
+     * @param {Array} tokenArray - The post fix evaluation token to be evaluate, e.g. ["a", "not", "b", "and"]
      * @param {any} row - The value of a and b on a row of truth table, e.g. ["a":true, "b":false]
      * @returns The result of the post fix evaluation on that row
      */
     evaluateRow(tokenArray, row) {
-        var stack = [];
-        var result;
-        var valA;
-        var valB;
+        const stack = [];
+        let result;
+        let valA;
+        let valB;
 
         tokenArray.forEach(function (element) {
             stack.push(element);
 
-            var token = stack.pop();
+            const token = stack.pop();
             if (token === "not") {
                 valB = stack.pop();
                 result = !valB
@@ -269,7 +250,7 @@ class PostfixEvaluator {
     }
 
     /**
-     * Evaludate the postfix expression. The evaluation result will be stored at "result" of each row object
+     * Evaluate the postfix expression. The evaluation result will be stored at "result" of each row object
      * @param postfixExpression
      */
     evaluate(postfixExpression) {
@@ -283,73 +264,148 @@ class PostfixEvaluator {
     }
 }
 
-
+// TODO don't use static due to arrow function can't access static method with ease
 class TruthTableUI {
+    /**
+     * true, false
+     *
+     * @type {symbol}
+     */
+    static FORMAT_TRUE_FALSE = Symbol();
+
+    /**
+     * 'UPPER_LETTER' - T, F
+     *
+     * @type {symbol}
+     */
+    static FORMAT_T_F = Symbol();
+
+    /**
+     * 'DIGIT' - 1, 0
+     *
+     * @type {symbol}
+     */
+    static FORMAT_DIGIT = Symbol();
+
     constructor() {
     }
 
     /**
      * Generate a truth table inside a div
      *
-     *
-     *
      * @param {String} infixInput - infix formula string
-     * @param {String} outputDiv - the id of the div
+     * @param {Element} outputDiv
      * @param {String} generatedTableId - the table id to be generated
-     * @param {any} format - the representation format of the cell value
-     *                format parameter - representation format:
-     *                undefined - true, false
-     *                'UPPER_LETTER' - T, F
-     *                'DIGIT' - 1, 0
+     * @param {Symbol} format - the representation format of the cell value
+     *
      */
     static generate(infixInput, outputDiv, generatedTableId, format) {
         // convert infix from postfix to infix
-        // and get the variablelist
-        var converter = new NotationConverter();
-        var postfix = converter.convert(infixInput);
-        var variableList = converter.getVariableList(postfix);
+        // and get the variable list
+        const converter = new NotationConverter();
+        const postfix = converter.convert(infixInput);
+        const variableList = converter.getVariableList(postfix);
 
         // generate true and false table
-        var truthTable = TruthTableGenerator.generate(variableList);
+        const truthTable = TruthTableGenerator.generate(variableList);
 
         // evaluate the result
-        var evaluator = new PostfixEvaluator();
+        const evaluator = new PostfixEvaluator();
         evaluator.setTruthTable(truthTable);
         evaluator.evaluate(postfix);
 
         // generate the UI
-        var resultTruthtable = evaluator.getTruthTable();
-        var tableContent = '<table class="table table-bordered table-hover text-center" id="' + generatedTableId + '" >';
-        tableContent += '<thead><tr>';
-        for (let i = 0; i < variableList.length; i++) {
-            tableContent += '<th class="text-center">' + variableList[i] + '</th>';
+        const resultTruthTable = evaluator.getTruthTable();
+
+        const table = document.createElement('table');
+        table.classList.add('table', 'table-bordered', 'table-hover', 'text-center');
+        table.id = generatedTableId;
+
+        // thead
+        const tableHeader = document.createElement('thead');
+        table.appendChild(tableHeader);
+
+        const tableHeaderRow = document.createElement('tr');
+        tableHeader.appendChild(tableHeaderRow);
+        variableList
+            .map((variable) =>
+                            TruthTableUI.CreateTextElement('th', variable, 'text-center'))
+            .forEach((th) => {
+                tableHeaderRow.appendChild(th);
+            });
+        tableHeaderRow.appendChild(this.CreateTextElement('th', infixInput, 'text-center'));
+
+        // Use fragment?
+        // tbody
+        const tableBody = document.createElement('tbody');
+        table.appendChild(tableBody);
+
+        const tableRows = resultTruthTable.map((row) => {
+            const columns = Object.keys(row).map(function (key) {
+                const value = TruthTableUI.extractValueInRow(format, row, key);
+                return TruthTableUI.CreateTextElement('td', value, 'text-center');
+            });
+
+            const tr = document.createElement('tr');
+            columns.forEach((td) => {
+                tr.appendChild(td);
+            });
+
+            return tr;
+        });
+        tableRows.forEach(tr => {
+            tableBody.appendChild(tr);
+        });
+
+        console.log('table: ', table);
+
+        if (!outputDiv){
+            console.warn('Output div should exists');
+        } else {
+            // outputDiv.innerHTML = tableContent;
+            outputDiv.appendChild(table);
         }
-        tableContent += '<th class="text-center">' + infixInput + '</th>';
-        tableContent += '</tr></thead>';
 
-        tableContent += '<tbody>';
-        for (let i = 0; i < resultTruthtable.length; i++) {
-            var row = resultTruthtable[i];
-            tableContent += '<tr>';
+        return table;
+    }
 
-            for (var key in row) {
-                // value in table cell
-                var value;
-                if (format === 'undefined' || format === undefined) {
-                    value = row[key];
-                } else if (format === 'UPPER_LETTER') {
-                    value = (row[key] === true) ? 'T' : 'F';
-                } else if (format === 'DIGIT') {
-                    value = (row[key] === true) ? '1' : '0';
-                }
-
-                tableContent += '<td>' + value + '</td>';
-            }
-            tableContent += '</tr>';
+    static CreateTextElement(tagName, text, className) {
+        const element = document.createElement(tagName);
+        if (className){
+            // element.classList.add('text-center');
+            element.classList.add(className);
         }
-        tableContent += '</tbody>';
-        tableContent += '</table>';
 
-        document.getElementById(outputDiv).innerHTML = tableContent;
+        const textNode = document.createTextNode(text);
+        element.appendChild(textNode);
+
+        return element;
+    }
+
+    /**
+     * Extract value in row
+     *
+     * @param {Symbol} format
+     * @param {Object} row
+     * @param {string} key
+     * @returns {string}
+     */
+    static extractValueInRow(format, row, key) {
+        if (!row.hasOwnProperty(key)){
+            console.warn('Row do not have key');
+            return undefined;
+        }
+
+        switch (format) {
+            case TruthTableUI.FORMAT_TRUE_FALSE:
+                return row[key];
+            case TruthTableUI.FORMAT_T_F:
+                return row[key] ? 'T' : 'F';
+            case TruthTableUI.FORMAT_DIGIT:
+                return row[key] ? '1' : '0';
+            default:
+                console.warn("Invalid symbol");
+                return undefined;
+        }
     }
 }

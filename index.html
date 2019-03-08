@@ -11,22 +11,37 @@
     <script src="jquery/jquery-2.1.1.js"></script>
     <script src="jquery/jquery-ui.js"></script>
     <script src="floatThead/jquery.floatThead.js"></script>
-    <script src="Truthtable.js"></script>
+    <script src="TruthTable.js"></script>
 
     <link href="index.css" rel="stylesheet"/>
     <script>
-        function generate() {
-            var infixInput = document.getElementById('infixInput').value;
-            var truthTable = new TruthTableUI();
-            var generatedTableId = 'generateTable';
-            var selectedRadioBtn = document.querySelector('input[name="format"]:checked');
-            if (selectedRadioBtn != null) {
-                var format = selectedRadioBtn.value;
-            }
-            TruthTableUI.generate(infixInput, 'truthTableDiv', generatedTableId, format);
+        /**
+         * Get format symbol by mapping the option in radio buttons
+         *
+         * @returns {Symbol}
+         */
+        function getFormatSymbol(){
+            const selectedRadioBtn = document.querySelector('input[name="format"]:checked');
+            const formatValue = (selectedRadioBtn && selectedRadioBtn.value)
+                                    ? selectedRadioBtn.value
+                                    : undefined;
 
-            var selecter = '#' + generatedTableId;
-            $(selecter).floatThead(); // bind the event to dynamically created table
+            const formatSymbolMapping = {
+                "UPPER_LETTER" : TruthTableUI.FORMAT_T_F,
+                "DIGIT" : TruthTableUI.FORMAT_DIGIT,
+            };
+
+            return formatSymbolMapping[formatValue] || TruthTableUI.FORMAT_TRUE_FALSE;
+        }
+
+        function generate() {
+            const infixInput = document.querySelector('#infixInput').value;
+            const outputDivElement = document.querySelector('#truthTableDiv');
+            const generatedTableId = 'generateTable';
+            const table = TruthTableUI.generate(infixInput, outputDivElement, generatedTableId, getFormatSymbol());
+
+            // const selector = '#' + generatedTableId;
+            $(table).floatThead(); // bind the event to dynamically created table
         }
 
         $(document).ready(function () {
