@@ -266,27 +266,6 @@ class PostfixEvaluator {
 
 // TODO don't use static due to arrow function can't access static method with ease
 class TruthTableUI {
-    /**
-     * true, false
-     *
-     * @type {symbol}
-     */
-    static FORMAT_TRUE_FALSE = Symbol();
-
-    /**
-     * 'UPPER_LETTER' - T, F
-     *
-     * @type {symbol}
-     */
-    static FORMAT_T_F = Symbol();
-
-    /**
-     * 'DIGIT' - 1, 0
-     *
-     * @type {symbol}
-     */
-    static FORMAT_DIGIT = Symbol();
-
     constructor() {
     }
 
@@ -409,3 +388,25 @@ class TruthTableUI {
         }
     }
 }
+
+/* Static Field, ES6 only allows property (a.k.a getter method) */
+/**
+ * true, false
+ *
+ * @type {symbol}
+ */
+TruthTableUI.FORMAT_TRUE_FALSE = Symbol();
+
+/**
+ * 'UPPER_LETTER' - T, F
+ *
+ * @type {symbol}
+ */
+TruthTableUI.FORMAT_T_F = Symbol();
+
+/**
+ * 'DIGIT' - 1, 0
+ *
+ * @type {symbol}
+ */
+TruthTableUI.FORMAT_DIGIT = Symbol();
