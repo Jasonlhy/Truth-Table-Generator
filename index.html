@@ -11,10 +11,15 @@
     <script src="jquery/jquery-2.1.1.js"></script>
     <script src="jquery/jquery-ui.js"></script>
     <script src="floatThead/jquery.floatThead.js"></script>
-    <script src="TruthTable.js"></script>
 
     <link href="index.css" rel="stylesheet"/>
-    <script>
+
+    <!-- Functions declared here no longer available in global space -->
+    <!-- Load as ES6 module -->
+    <script type="module">
+        import { TruthTableUI } from './TruthTable.js'
+        const $ = window.jQuery;
+
         /**
          * Get format symbol by mapping the option in radio buttons
          *
@@ -34,6 +39,10 @@
             return formatSymbolMapping[formatValue] || TruthTableUI.FORMAT_TRUE_FALSE;
         }
 
+        /**
+         * Generate TruthTable
+         *
+         */
         function generate() {
             const infixInput = document.querySelector('#infixInput').value;
             const outputDivElement = document.querySelector('#truthTableDiv');
@@ -44,8 +53,12 @@
             $(table).floatThead(); // bind the event to dynamically created table
         }
 
+        /**
+         * Register UI Event
+         */
         $(document).ready(function () {
             $("#precedenceTable").floatThead(); // bind the precedence table to stick with header
+            $("#generate-button").click(generate);
         });
     </script>
 </head>
@@ -78,7 +91,7 @@
     <input type="text" class="form-control" id="infixInput"/>
 </fieldset>
 <br>
-<button type="button" class="btn btn-primary btn-sm" onclick="generate()">Generate</button>
+<button id="generate-button" type="button" class="btn btn-primary btn-sm">Generate</button>
 <br>
 
 <br/>
@@ -86,7 +99,7 @@
 <br/>
 <h1>Truth Table Generated</h1>
 <div id="truthTableDiv">
-    Nothing here!
+    <!--Nothing here!-->
 </div>
 
 <br/>

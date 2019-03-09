@@ -1,3 +1,16 @@
+/** This file is intended to be written with following purposes
+ *  - Without jQuery
+ *  - Use ES5, ES6 feature if possible
+ *      - Array.from, Array.filter, map, reduce
+ *      - ES6 module, arrow function, Set
+ *      - ES6 class and ES6 function property
+ *      - ES6 Symbol for avoiding magic string
+ *  - Avoid string concatenation of HTML
+ */
+
+/**
+ * Convert notation into postfix expression
+ */
 class NotationConverter {
     /**
      *
@@ -265,7 +278,7 @@ class PostfixEvaluator {
 }
 
 // TODO don't use static due to arrow function can't access static method with ease
-class TruthTableUI {
+ export class TruthTableUI {
     constructor() {
     }
 
@@ -336,22 +349,29 @@ class TruthTableUI {
             tableBody.appendChild(tr);
         });
 
-        console.log('table: ', table);
+        // console.log('table: ', table);
 
         if (!outputDiv){
             console.warn('Output div should exists');
         } else {
-            // outputDiv.innerHTML = tableContent;
-            outputDiv.appendChild(table);
+            outputDiv.insertBefore(table, outputDiv.firstChild);
         }
 
         return table;
     }
 
+     /**
+      * Generate <{tagName} class="{className}">{text}</{tagName}>
+      *
+      * @param tagName
+      * @param text
+      * @param className
+      * @returns {HTMLElement}
+      * @constructor
+      */
     static CreateTextElement(tagName, text, className) {
         const element = document.createElement(tagName);
         if (className){
-            // element.classList.add('text-center');
             element.classList.add(className);
         }
 
@@ -410,3 +430,7 @@ TruthTableUI.FORMAT_T_F = Symbol();
  * @type {symbol}
  */
 TruthTableUI.FORMAT_DIGIT = Symbol();
+
+// export default {
+//     TruthTableUI: TruthTableUI
+// }
